@@ -37,13 +37,13 @@
 
   <meta name="description" content="脑裂解释：也就是一个Master假死或网络原因检测不到时后，通过选举一个新Master出来时，旧的Master“回光返照”的好了，两个美猴王进行竞争地位，这就是脑裂####　解决方案：  通过设置仲裁机制，设置第三方检测服务器（Monitor）。当Slave确定准备接管Master时，让Monitor去ping一下旧Master以查看是否正常运行，否则判定为死亡。——————-《深入分布式缓存从原">
 <meta property="og:type" content="article">
-<meta property="og:title" content="分布式">
+<meta property="og:title" content="分布式缓存">
 <meta property="og:url" content="http://chengccj.github.io/2020/06/01/%E5%88%86%E5%B8%83%E5%BC%8F/index.html">
 <meta property="og:site_name" content="程小生">
 <meta property="og:description" content="脑裂解释：也就是一个Master假死或网络原因检测不到时后，通过选举一个新Master出来时，旧的Master“回光返照”的好了，两个美猴王进行竞争地位，这就是脑裂####　解决方案：  通过设置仲裁机制，设置第三方检测服务器（Monitor）。当Slave确定准备接管Master时，让Monitor去ping一下旧Master以查看是否正常运行，否则判定为死亡。——————-《深入分布式缓存从原">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2020-06-01T08:11:29.000Z">
-<meta property="article:modified_time" content="2020-06-01T13:20:54.337Z">
+<meta property="article:modified_time" content="2020-06-03T12:48:34.331Z">
 <meta property="article:author" content="Cheng">
 <meta property="article:tag" content="分布式">
 <meta name="twitter:card" content="summary">
@@ -61,7 +61,7 @@
   };
 </script>
 
-  <title>分布式 | 程小生</title>
+  <title>分布式缓存 | 程小生</title>
   
 
 
@@ -182,7 +182,7 @@
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
-          分布式
+          分布式缓存
         </h1>
 
         <div class="post-meta">
@@ -191,10 +191,16 @@
                 <i class="far fa-calendar"></i>
               </span>
               <span class="post-meta-item-text">发表于</span>
-              
 
-              <time title="创建时间：2020-06-01 08:11:29 / 修改时间：13:20:54" itemprop="dateCreated datePublished" datetime="2020-06-01T08:11:29+00:00">2020-06-01</time>
+              <time title="创建时间：2020-06-01 08:11:29" itemprop="dateCreated datePublished" datetime="2020-06-01T08:11:29+00:00">2020-06-01</time>
             </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2020-06-03 12:48:34" itemprop="dateModified" datetime="2020-06-03T12:48:34+00:00">2020-06-03</time>
+              </span>
 
           
 
@@ -224,6 +230,71 @@
 <li><p>IP地址哈希：确定相同IP请求就转发给同一个后端借点处理，优点：方便session的保存。</p>
 </li>
 </ol>
+<h1 id="Ehcache"><a href="#Ehcache" class="headerlink" title="Ehcache"></a>Ehcache</h1><h3 id="主要的模块："><a href="#主要的模块：" class="headerlink" title="主要的模块："></a>主要的模块：</h3><ul>
+<li><h4 id="Cache-Replication：主要负责缓存同步的几种实现，包括TerraCotta，RMI，JMS和-JGroup"><a href="#Cache-Replication：主要负责缓存同步的几种实现，包括TerraCotta，RMI，JMS和-JGroup" class="headerlink" title="Cache Replication：主要负责缓存同步的几种实现，包括TerraCotta，RMI，JMS和 JGroup"></a>Cache Replication：主要负责缓存同步的几种实现，包括TerraCotta，RMI，JMS和 JGroup</h4></li>
+<li><h4 id="In-Process-APIS：包括Ehcache对外常用的API，包括JRuby，Hibernate，JMX，SOAP-API，Cache-server五种API"><a href="#In-Process-APIS：包括Ehcache对外常用的API，包括JRuby，Hibernate，JMX，SOAP-API，Cache-server五种API" class="headerlink" title="In-Process APIS：包括Ehcache对外常用的API，包括JRuby，Hibernate，JMX，SOAP API，Cache server五种API"></a>In-Process APIS：包括Ehcache对外常用的API，包括JRuby，Hibernate，JMX，SOAP API，Cache server五种API</h4></li>
+<li><h4 id="Network-APIS：包括Ehcache的通信协议，主要有RESTful-API，SOAP-API和JMXAPI等"><a href="#Network-APIS：包括Ehcache的通信协议，主要有RESTful-API，SOAP-API和JMXAPI等" class="headerlink" title="Network APIS：包括Ehcache的通信协议，主要有RESTful API，SOAP API和JMXAPI等"></a>Network APIS：包括Ehcache的通信协议，主要有RESTful API，SOAP API和JMXAPI等</h4></li>
+<li><h4 id="Ehcache-Core："><a href="#Ehcache-Core：" class="headerlink" title="Ehcache Core："></a>Ehcache Core：</h4><ol>
+<li>Cache Manager：缓存管理器，可以通过单例或者多例的方式创建，也是入口类</li>
+<li>Cache：每个CacheManager可以管理多个Cache，每个Cache可采用hash的方式管理多个Element</li>
+<li>Element：用于存放真正的缓存内容</li>
+<li>SOR：可取到真实数据的组件，可以是真正的业务逻辑、外部接口调用，存放真实数据的数据库等等，缓存就是从SOR中读取或者写入到SOR中去的</li>
+</ol>
+</li>
+</ul>
+<h1 id="热点数据"><a href="#热点数据" class="headerlink" title="热点数据"></a>热点数据</h1><ol>
+<li>在Cache的客户端做本地的LocalCache，当发现热点数据时直接缓存在客户端里，而不要请求缓存到服务器里</li>
+<li>Facebook：通过多个Key_index(key:xxx#N)来获取热点key的数据，其实质也是把key分散：<ol>
+<li>把巨热数据的key发布到所有服务器上，每个服务器给对应的key一个别名，比如：get key:xxx=&gt;get key:xxx#N</li>
+</ol>
+</li>
+</ol>
+<h1 id="Redis"><a href="#Redis" class="headerlink" title="Redis"></a>Redis</h1><h4 id="可持久化："><a href="#可持久化：" class="headerlink" title="可持久化："></a>可持久化：</h4><ol>
+<li>SAVE可以由<font color="red">客户端</font>触发，也可以在redis shutdown时触发。save本身都是以普通命令执行——单线程<font color="red">串行化</font>地执行一个一个命令。<ul>
+<li>特点：当前状态写入磁盘作为快照保存，其他所有命令不会并发执行，so执行时间很长，数据的状态都是一致的。</li>
+</ul>
+</li>
+<li>BGSAVE可以由<font color="red">客户端</font>通过命令显示触发、可以通过配置由定时任务触发、也可以在master-Slave的分布式结构下由Slave节点触发。<ul>
+<li>特点：fork子线程进行执行的，所以不一定能保持数据的完整性。且因为是fork，所以需保证Redis服务器的空闲内存。</li>
+</ul>
+</li>
+<li>增量模式的持久化（AOF，FlushAppendOnlyFile），平时说的AOF最多丢失一秒数据是在every second策略的情况下，其他的策略不做解释。<ul>
+<li>每秒异步地触发fsync方法。</li>
+<li>fsync方式的执行者是<font color="red">BIO</font>线程池中的某个线程。</li>
+<li>flushAppendOnlyFile函数只是作为生产者将fsync任务放入队列，BIO作为消费者进行消费。</li>
+</ul>
+</li>
+<li>回放过程就是将AOF保存的命令重新执行一遍。</li>
+</ol>
+<h4 id="主从复制"><a href="#主从复制" class="headerlink" title="主从复制"></a>主从复制</h4><ul>
+<li><p>master对外提供读写服务，Slave节点作为master的数据备份，对外不提供写服务。</p>
+</li>
+<li><p>主备复制由Slave主动触发</p>
+<ol>
+<li>Slave向master发起SYNC（PSYNC为断点续传）命令，master被动地将新进的Slave节点加入自己的主备复制集群。</li>
+<li>master收到通知后，开启BGSAVE操作，BGSAVE完成后，将快照发送给Slave。</li>
+<li>发送期间，master收到来自用户客户端新的写命令，除了正常地响应之外，都再存一份到backlog队列。</li>
+<li>快照信息发送完成后，master继续发送backlog队列消息。</li>
+<li>backlog发送完成后，后续的写操作同时发给Slave，保持实时的异地复制。</li>
+</ol>
+</li>
+<li><h5 id="故障转移："><a href="#故障转移：" class="headerlink" title="故障转移："></a>故障转移：</h5><ul>
+<li><p>daemon单点监视（也就是哨兵集群模式），多个daemon可以解决可用性问题，但解决不了一致性问题（由Redis的sentinel提供一套多daemon间交互的机制。</p>
+</li>
+<li><p>最终只能有一个哨兵作为故障转移的发起者（主导者），由选举算法进行选举主导者（谁先询问谁的机会就越大）。</p>
+<h5 id="Redis集群："><a href="#Redis集群：" class="headerlink" title="Redis集群："></a>Redis集群：</h5></li>
+</ul>
+<ol>
+<li>只有master节点具有读写服务，Slave只有读服务。</li>
+<li>slot（插槽、数据分片）的作用或含义：将数据划分为16384个分片，每个分片负责其中一部分。</li>
+<li>一致性：引入两个自增的epoch变量来使得集群配置在各个节点间达成最终一致。<ul>
+<li>epoch变量：记录着集群的版本号（集群没变更一次，版本号就增加）、所有节点的信息（包括数据分片（slot）、节点的NodeId等信息</li>
+</ul>
+</li>
+<li>节点对集群状态的认知来自其他节点的信息交互（通过Redis Cluster，Gossip协议）</li>
+</ol>
+</li>
+</ul>
 
     </div>
 
@@ -305,7 +376,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
-          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#脑裂"><span class="nav-number">1.</span> <span class="nav-text">脑裂</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#解释：也就是一个Master假死或网络原因检测不到时后，通过选举一个新Master出来时，旧的Master“回光返照”的好了，两个美猴王进行竞争地位，这就是脑裂"><span class="nav-number">1.0.1.</span> <span class="nav-text">解释：也就是一个Master假死或网络原因检测不到时后，通过选举一个新Master出来时，旧的Master“回光返照”的好了，两个美猴王进行竞争地位，这就是脑裂</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#负载均衡（Nginx）"><span class="nav-number">2.</span> <span class="nav-text">负载均衡（Nginx）</span></a></li></ol></div>
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#脑裂"><span class="nav-number">1.</span> <span class="nav-text">脑裂</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#解释：也就是一个Master假死或网络原因检测不到时后，通过选举一个新Master出来时，旧的Master“回光返照”的好了，两个美猴王进行竞争地位，这就是脑裂"><span class="nav-number">1.0.1.</span> <span class="nav-text">解释：也就是一个Master假死或网络原因检测不到时后，通过选举一个新Master出来时，旧的Master“回光返照”的好了，两个美猴王进行竞争地位，这就是脑裂</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#负载均衡（Nginx）"><span class="nav-number">2.</span> <span class="nav-text">负载均衡（Nginx）</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Ehcache"><span class="nav-number">3.</span> <span class="nav-text">Ehcache</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#主要的模块："><span class="nav-number">3.0.1.</span> <span class="nav-text">主要的模块：</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#Cache-Replication：主要负责缓存同步的几种实现，包括TerraCotta，RMI，JMS和-JGroup"><span class="nav-number">3.0.1.1.</span> <span class="nav-text">Cache Replication：主要负责缓存同步的几种实现，包括TerraCotta，RMI，JMS和 JGroup</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#In-Process-APIS：包括Ehcache对外常用的API，包括JRuby，Hibernate，JMX，SOAP-API，Cache-server五种API"><span class="nav-number">3.0.1.2.</span> <span class="nav-text">In-Process APIS：包括Ehcache对外常用的API，包括JRuby，Hibernate，JMX，SOAP API，Cache server五种API</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Network-APIS：包括Ehcache的通信协议，主要有RESTful-API，SOAP-API和JMXAPI等"><span class="nav-number">3.0.1.3.</span> <span class="nav-text">Network APIS：包括Ehcache的通信协议，主要有RESTful API，SOAP API和JMXAPI等</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#Ehcache-Core："><span class="nav-number">3.0.1.4.</span> <span class="nav-text">Ehcache Core：</span></a></li></ol></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#热点数据"><span class="nav-number">4.</span> <span class="nav-text">热点数据</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#Redis"><span class="nav-number">5.</span> <span class="nav-text">Redis</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#可持久化："><span class="nav-number">5.0.0.1.</span> <span class="nav-text">可持久化：</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#主从复制"><span class="nav-number">5.0.0.2.</span> <span class="nav-text">主从复制</span></a><ol class="nav-child"><li class="nav-item nav-level-5"><a class="nav-link" href="#故障转移："><span class="nav-number">5.0.0.2.1.</span> <span class="nav-text">故障转移：</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#Redis集群："><span class="nav-number">5.0.0.2.2.</span> <span class="nav-text">Redis集群：</span></a></li></ol></li></ol></li></ol></li></ol></li></ol></div>
       </div>
       <!--/noindex-->
 
