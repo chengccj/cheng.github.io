@@ -166,6 +166,120 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://chengccj.github.io/2020/07/21/%E7%BA%BF%E7%A8%8B/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Cheng">
+      <meta itemprop="description" content="一个咸鱼码农的小破站">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="程小生">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2020/07/21/%E7%BA%BF%E7%A8%8B/" class="post-title-link" itemprop="url">线程知识点</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2020-07-21 20:41:29" itemprop="dateCreated datePublished" datetime="2020-07-21T20:41:29+00:00">2020-07-21</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2020-08-02 10:50:16" itemprop="dateModified" datetime="2020-08-02T10:50:16+00:00">2020-08-02</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <p>实现线程的方式，synchronize实现原理,与lock区别,自旋锁。线程池，线程池等待队列</p>
+<h3 id="线程拒绝策略："><a href="#线程拒绝策略：" class="headerlink" title="线程拒绝策略："></a>线程拒绝策略：</h3><ul>
+<li><p>AbortPolicy:丢弃任务并抛出RejectedExecutionException异常 (默认)</p>
+</li>
+<li><pre><code class="java"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">rejectedExecution</span><span class="params">(Runnable r, ThreadPoolExecutor e)</span> </span>{
+    <span class="keyword">throw</span> <span class="keyword">new</span> RejectedExecutionException(<span class="string">"Task "</span> + r.toString() +<span class="string">" rejected from "</span> +e.toString());
+    }
+&lt;!--￼<span class="number">0</span>--&gt;
+
+
+</code></pre>
+</li>
+</ul>
+<ul>
+<li><p>DiscardOldestPolicy：丢弃队列最前面的任务，执行后面的任务</p>
+  <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">rejectedExecution</span><span class="params">(Runnable r, ThreadPoolExecutor e)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (!e.isShutdown()) &#123;</span><br><span class="line">        e.getQueue().poll();</span><br><span class="line">        e.execute(r);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+
+</li>
+</ul>
+<ul>
+<li><p>CallerRunsPolicy：由调用线程处理该任务 </p>
+  <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">rejectedExecution</span><span class="params">(Runnable r, ThreadPoolExecutor e)</span> </span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (!e.isShutdown()) &#123;</span><br><span class="line">        r.run();<span class="comment">//让提交任务的线程自己run,hhh</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="sleep和wait区别"><a href="#sleep和wait区别" class="headerlink" title="sleep和wait区别:"></a>sleep和wait区别:</h3><ol>
+<li>sleep：主动让出CPU，但不会释放资源同步锁。可以在任何地方使用。</li>
+<li>wait：暂时让出资源同步锁进入等待队列，而且需要唤醒才能继续工作，只能在同步方法或同步快内使用。</li>
+<li>yield：yield方法会临时暂停当前正在执行的线程，来让有同样优先级的正在等待的线程有机会执行，除非没有正在等待的线程，或者所有正在等待的线程的优先级都比较低。</li>
+</ol>
+</li>
+</ul>
+<ol start="4">
+<li>sleep不会释放锁【它会抱着锁睡觉】</li>
+</ol>
+<h3 id="start和run："><a href="#start和run：" class="headerlink" title="start和run："></a>start和run：</h3><pre><code>1. start：通过start()方法来启动的新线程，处于就绪（可运行）状态，获得CPU时间片后就调用run。 start能启动一个新线程
+2. run：可重复调用。
+如果直接调用run方法，并不会启动新线程。调用start方法方可启动线程，而run方法只是thread的一个普通方法调用，还是在主线程里执行。</code></pre><h3 id="如果线程池执行shutdown或shutdownNow，线程池中线程会中断吗？参考"><a href="#如果线程池执行shutdown或shutdownNow，线程池中线程会中断吗？参考" class="headerlink" title="如果线程池执行shutdown或shutdownNow，线程池中线程会中断吗？参考"></a>如果线程池执行shutdown或shutdownNow，线程池中线程会中断吗？<a href="https://blog.csdn.net/u012168222/article/details/52790400" target="_blank" rel="noopener">参考</a></h3><pre><code>1. **shutdown**
+    - 阻止新来的任务提交，对已经提交了的任务不会产生任何影响。当已经提交的任务执行完后，它会将那些闲置的线程（idleWorks）进行中断，这个过程是异步的。
+    - **阻止新来的任务提交**：通过将线程池的状态改成SHUTDOWN，当再将执行execute提交任务时，如果测试到状态不为RUNNING，则抛出rejectedExecution，从而达到阻止新任务提交的目的。
+    - **为何对提交的任务不产生任何影响:**在调用中断任务的方法时，它会检测workers中的任务，如果worker对应的任务没有中断，并且是空闲线程，它才会去中断。另外的话，workQueue中的值，还是按照一定的逻辑顺序不断的往works中进行输送的，这样一来，就可以保证提交的任务按照线程本身的逻辑执行，不受到影响。
+2. **shutdownNow()**
+    - 阻止新来的任务提交，同时会中断当前正在运行的线程，即workers中的线程。另外它还将workQueue中的任务给移除，并将这些任务添加到列表中进行返回
+    - **阻止新来的任务提交:**通过将线程池的状态改成STOP，当再将执行execute提交任务时，如果测试到状态不为RUNNING，则抛出rejectedExecution，从而达到阻止新任务提交的目的.
+    - **提交的任务代码块中，正在等待某个资源，而这个资源没到，但此时执行shutdownNow():**当执行shutdownNow()方法时，如遇已经激活的任务，并且处于阻塞状态时，shutdownNow()会执行1次中断阻塞的操作，此时对应的线程报InterruptedException，如果后续还要等待某个资源，则按正常逻辑等待某个资源的到达。例如，一个线程正在sleep状态中，此时执行shutdownNow()，它向该线程发起interrupt()请求，而sleep()方法遇到有interrupt()请求时，会抛出InterruptedException()，并继续往下执行。在这里要提醒注意的是，在激活的任务中，如果有多个sleep(),该方法只会中断第一个sleep()，而后面的仍然按照正常的执行逻辑进行。</code></pre><h3 id="合理的配置线程池（考虑CPU密集型和IO密集型"><a href="#合理的配置线程池（考虑CPU密集型和IO密集型" class="headerlink" title="合理的配置线程池（考虑CPU密集型和IO密集型):"></a>合理的配置线程池（考虑CPU密集型和IO密集型):</h3><ol>
+<li>CPU密集型：CPU满载，IO少，比较笔者自身的旧笔记本，CPU性能跟不上固态的性能，稍微处理一点东西，CPU就满载，但磁盘的IO读写极其低。</li>
+<li>IO密集型：可以看成一个撕裂者CPU搭配SATA硬盘，硬盘读写跑满，CPU的负载纹丝不动</li>
+<li>CPU密集型的线程池：最多就跟CPU核心数相同的线程数目，原因：本来CPU就繁忙了，还不断的加线程进去阻塞，导致更卡，最后宕机</li>
+<li>IO密集型：CPU核心数的两倍左右，毕竟CPU比较空闲，IO的执行不消耗CPU，所以得尽其所有的消费CPU性能。</li>
+</ol>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="http://chengccj.github.io/2020/06/01/%E5%88%86%E5%B8%83%E5%BC%8F/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -180,7 +294,7 @@
       <header class="post-header">
         <h2 class="post-title" itemprop="name headline">
           
-            <a href="/2020/06/01/%E5%88%86%E5%B8%83%E5%BC%8F/" class="post-title-link" itemprop="url">分布式缓存</a>
+            <a href="/2020/06/01/%E5%88%86%E5%B8%83%E5%BC%8F/" class="post-title-link" itemprop="url">分布式\微服务</a>
         </h2>
 
         <div class="post-meta">
@@ -197,7 +311,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-06-03 12:48:34" itemprop="dateModified" datetime="2020-06-03T12:48:34+00:00">2020-06-03</time>
+                <time title="修改时间：2020-07-02 14:45:08" itemprop="dateModified" datetime="2020-07-02T14:45:08+00:00">2020-07-02</time>
               </span>
 
           
@@ -211,7 +325,7 @@
     <div class="post-body" itemprop="articleBody">
 
       
-          <h1 id="脑裂"><a href="#脑裂" class="headerlink" title="脑裂"></a>脑裂</h1><h3 id="解释：也就是一个Master假死或网络原因检测不到时后，通过选举一个新Master出来时，旧的Master“回光返照”的好了，两个美猴王进行竞争地位，这就是脑裂"><a href="#解释：也就是一个Master假死或网络原因检测不到时后，通过选举一个新Master出来时，旧的Master“回光返照”的好了，两个美猴王进行竞争地位，这就是脑裂" class="headerlink" title="解释：也就是一个Master假死或网络原因检测不到时后，通过选举一个新Master出来时，旧的Master“回光返照”的好了，两个美猴王进行竞争地位，这就是脑裂"></a>解释：也就是一个Master假死或网络原因检测不到时后，通过选举一个新Master出来时，旧的Master“回光返照”的好了，两个美猴王进行竞争地位，这就是脑裂</h3><p>####　解决方案：</p>
+          <h1 id="分布式缓存"><a href="#分布式缓存" class="headerlink" title="分布式缓存"></a>分布式缓存</h1><h2 id="脑裂"><a href="#脑裂" class="headerlink" title="脑裂"></a>脑裂</h2><h3 id="解释：也就是一个Master假死或网络原因检测不到时后，通过选举一个新Master出来时，旧的Master“回光返照”的好了，两个美猴王进行竞争地位，这就是脑裂"><a href="#解释：也就是一个Master假死或网络原因检测不到时后，通过选举一个新Master出来时，旧的Master“回光返照”的好了，两个美猴王进行竞争地位，这就是脑裂" class="headerlink" title="解释：也就是一个Master假死或网络原因检测不到时后，通过选举一个新Master出来时，旧的Master“回光返照”的好了，两个美猴王进行竞争地位，这就是脑裂"></a>解释：也就是一个Master假死或网络原因检测不到时后，通过选举一个新Master出来时，旧的Master“回光返照”的好了，两个美猴王进行竞争地位，这就是脑裂</h3><p>####　解决方案：</p>
 <ol>
 <li>通过设置仲裁机制，设置第三方检测服务器（Monitor）。当Slave确定准备接管Master时，让Monitor去ping一下旧Master以查看是否正常运行，否则判定为死亡。——————-《深入分布式缓存从原理到实践》</li>
 <li>通过Lease解决</li>
@@ -224,6 +338,152 @@
             </div>
           <!--/noindex-->
         
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://chengccj.github.io/2020/06/01/AOP%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Cheng">
+      <meta itemprop="description" content="一个咸鱼码农的小破站">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="程小生">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2020/06/01/AOP%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90/" class="post-title-link" itemprop="url">Aop</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2020-06-01 08:11:29" itemprop="dateCreated datePublished" datetime="2020-06-01T08:11:29+00:00">2020-06-01</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2020-06-23 14:18:08" itemprop="dateModified" datetime="2020-06-23T14:18:08+00:00">2020-06-23</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">interface</span> <span class="title">AService</span></span>&#123;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">a</span><span class="params">()</span></span>;</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">b</span><span class="params">()</span></span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="meta">@Service</span>()</span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">AServiceImpl</span> <span class="title">inplements</span> <span class="title">AService</span></span>&#123;</span><br><span class="line">    <span class="meta">@Transactional</span>(propagation = Propagation.REQUIRED)</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">a</span><span class="params">()</span></span>&#123;</span><br><span class="line">        <span class="keyword">this</span>.b();</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="meta">@Transactional</span>(propagation = Propagation.REQUIRES_NEW)</span><br><span class="line">    <span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">b</span><span class="params">()</span></span>&#123;</span><br><span class="line">        </span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>此处的this指向目标对象，因此调用this.b()将不会执行b事务切面，即执行事务增强，因此b方法的事务定义“@Transational(propagation = Propagation.REQUIRES_NEW)”将不会实施，为了解决这个问题，我们可以：</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">aop:aspectj-autoproxy</span> <span class="attr">expose-proxy</span>=<span class="string">"true"</span>/&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>然后将以上代码中的this.b()改为((AService)AopContext.currenProxy()).b()即可，通过以上修改便可以完成对a和b的增强，最后注册组件并通知，便于监听期进一步处理。</p>
+
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://chengccj.github.io/2020/06/01/Mybatis/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Cheng">
+      <meta itemprop="description" content="一个咸鱼码农的小破站">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="程小生">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2020/06/01/Mybatis/" class="post-title-link" itemprop="url">Mybatis</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2020-06-01 08:11:29" itemprop="dateCreated datePublished" datetime="2020-06-01T08:11:29+00:00">2020-06-01</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2020-06-21 03:08:08" itemprop="dateModified" datetime="2020-06-21T03:08:08+00:00">2020-06-21</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="Mybatis"><a href="#Mybatis" class="headerlink" title="Mybatis"></a>Mybatis</h1><p>Mapper(映射器): roleMapper.getRole</p>
+<p>SqlSession: sqlSession.selectOne</p>
+<h4 id="生命周期"><a href="#生命周期" class="headerlink" title="生命周期"></a>生命周期</h4><ol>
+<li>SqlSessionFactoryBuilder：构建(多个)SessionFactory,构建好后就寿终正寝。</li>
+<li>SqlSessionFactory：全局的，在正个流程都可用。视情况看是否采用单例，以达到节省资源。</li>
+<li>SQLSession：线程不安全。相当于JDBC中的Connection对象。</li>
+<li>Mapper：相当JDBC中的一条SQL语句的执行，<font color="red">最大</font>范围跟SQLSession相同。</li>
+</ol>
+<h4 id="缓存"><a href="#缓存" class="headerlink" title="缓存"></a>缓存</h4><ul>
+<li>一般是一级缓存，同一个SQLSession对象调用同一个mapper方法(参数和sql语句都一样)，则从缓存中获取。 </li>
+<li>不同的SQLSession是相互隔离的，所以不同的SQLSession对象会重新发送sql到数据库去执行。</li>
+</ul>
+
       
     </div>
 
@@ -265,10 +525,16 @@
                 <i class="far fa-calendar"></i>
               </span>
               <span class="post-meta-item-text">发表于</span>
-              
 
-              <time title="创建时间：2020-05-28 08:11:29 / 修改时间：15:05:53" itemprop="dateCreated datePublished" datetime="2020-05-28T08:11:29+00:00">2020-05-28</time>
+              <time title="创建时间：2020-05-28 08:11:29" itemprop="dateCreated datePublished" datetime="2020-05-28T08:11:29+00:00">2020-05-28</time>
             </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2020-07-25 14:37:24" itemprop="dateModified" datetime="2020-07-25T14:37:24+00:00">2020-07-25</time>
+              </span>
 
           
 
@@ -344,7 +610,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-06-01 08:26:03" itemprop="dateModified" datetime="2020-06-01T08:26:03+00:00">2020-06-01</time>
+                <time title="修改时间：2020-08-01 15:18:00" itemprop="dateModified" datetime="2020-08-01T15:18:00+00:00">2020-08-01</time>
               </span>
 
           
@@ -485,12 +751,12 @@
       <div class="site-state-item site-state-posts">
           <a href="/archives/">
         
-          <span class="site-state-item-count">3</span>
+          <span class="site-state-item-count">6</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-tags">
-        <span class="site-state-item-count">3</span>
+        <span class="site-state-item-count">6</span>
         <span class="site-state-item-name">标签</span>
       </div>
   </nav>
