@@ -42,11 +42,13 @@
 <meta property="og:site_name" content="程小生">
 <meta property="og:description" content="MyISAM InnoDB    行级锁 表级锁 表级锁和行级锁（默认）   外键 不支持 支持   MVCC 不支持 支持（比单纯的加锁更高效）   扩展能力     索引 非聚簇索引 聚簇索引">
 <meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://chengccj.github.io/2020/04/28/%E6%95%B0%E6%8D%AE%E5%BA%93/indexDataStructure.png">
 <meta property="article:published_time" content="2020-04-28T08:11:29.000Z">
-<meta property="article:modified_time" content="2020-08-16T15:48:13.264Z">
+<meta property="article:modified_time" content="2020-08-16T15:53:04.250Z">
 <meta property="article:author" content="Cheng">
 <meta property="article:tag" content="MySQL">
 <meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="http://chengccj.github.io/2020/04/28/%E6%95%B0%E6%8D%AE%E5%BA%93/indexDataStructure.png">
 
 <link rel="canonical" href="http://chengccj.github.io/2020/04/28/%E6%95%B0%E6%8D%AE%E5%BA%93/">
 
@@ -199,7 +201,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-08-16 15:48:13" itemprop="dateModified" datetime="2020-08-16T15:48:13+00:00">2020-08-16</time>
+                <time title="修改时间：2020-08-16 15:53:04" itemprop="dateModified" datetime="2020-08-16T15:53:04+00:00">2020-08-16</time>
               </span>
 
           
@@ -342,7 +344,7 @@
 <li>前提：联合索引（col1，col2，col3）</li>
 <li>因为数据库的优化策略，所以where col1 = x and col2 = y和col2 = y and col1 = x是一样的结果</li>
 <li>关于联合索引的数据结构如下，col1表示的是年龄，col2表示的是姓氏，col3表示的是名字，如果是where col2 = ‘李’,则只能全表(<font color="red">是下面这个索引表，而不是数据表？</font>)查询</li>
-<li>若</li>
+<li><img src="/2020/04/28/%E6%95%B0%E6%8D%AE%E5%BA%93/indexDataStructure.png" alt="联合索引数据结构图"></li>
 </ol>
 <h3 id="参考："><a href="#参考：" class="headerlink" title="参考："></a>参考：</h3><h3 id="1-MyISAM-B-Tree叶节点的data域存放的是数据记录的地址。在索引检索的时候，首先按照B-Tree搜索算法搜索索引，如果指定的Key存在，则取出其-data-域的值，然后以-data-域的值为地址读取相应的数据记录。这被称为“非聚簇索引”。"><a href="#1-MyISAM-B-Tree叶节点的data域存放的是数据记录的地址。在索引检索的时候，首先按照B-Tree搜索算法搜索索引，如果指定的Key存在，则取出其-data-域的值，然后以-data-域的值为地址读取相应的数据记录。这被称为“非聚簇索引”。" class="headerlink" title="1. MyISAM: B+Tree叶节点的data域存放的是数据记录的地址。在索引检索的时候，首先按照B+Tree搜索算法搜索索引，如果指定的Key存在，则取出其 data 域的值，然后以 data 域的值为地址读取相应的数据记录。这被称为“非聚簇索引”。"></a>1. MyISAM: B+Tree叶节点的data域存放的是数据记录的地址。在索引检索的时候，首先按照B+Tree搜索算法搜索索引，如果指定的Key存在，则取出其 data 域的值，然后以 data 域的值为地址读取相应的数据记录。这被称为“非聚簇索引”。</h3><h3 id="2-InnoDB-其数据文件本身就是索引文件。相比MyISAM，索引文件和数据文件是分离的，其表数据文件本身就是按B-Tree组织的一个索引结构，树的叶节点data域保存了完整的数据记录。这个索引的key是数据表的主键，因此InnoDB表数据文件本身就是主索引。这被称为“聚簇索引（或聚集索引）”。而其余的索引都作为辅助索引，辅助索引的data域存储相应记录主键的值而不是地址，这也是和MyISAM不同的地方。在根据主索引搜索时，直接找到key所在的节点即可取出数据；在根据辅助索引查找时，则需要先取出主键的值，再走一遍主索引。-因此，在设计表的时候，不建议使用过长的字段作为主键，也不建议使用非单调的字段作为主键，这样会造成主索引频繁分裂。-PS：整理自《Java工程师修炼之道》"><a href="#2-InnoDB-其数据文件本身就是索引文件。相比MyISAM，索引文件和数据文件是分离的，其表数据文件本身就是按B-Tree组织的一个索引结构，树的叶节点data域保存了完整的数据记录。这个索引的key是数据表的主键，因此InnoDB表数据文件本身就是主索引。这被称为“聚簇索引（或聚集索引）”。而其余的索引都作为辅助索引，辅助索引的data域存储相应记录主键的值而不是地址，这也是和MyISAM不同的地方。在根据主索引搜索时，直接找到key所在的节点即可取出数据；在根据辅助索引查找时，则需要先取出主键的值，再走一遍主索引。-因此，在设计表的时候，不建议使用过长的字段作为主键，也不建议使用非单调的字段作为主键，这样会造成主索引频繁分裂。-PS：整理自《Java工程师修炼之道》" class="headerlink" title="2.InnoDB: 其数据文件本身就是索引文件。相比MyISAM，索引文件和数据文件是分离的，其表数据文件本身就是按B+Tree组织的一个索引结构，树的叶节点data域保存了完整的数据记录。这个索引的key是数据表的主键，因此InnoDB表数据文件本身就是主索引。这被称为“聚簇索引（或聚集索引）”。而其余的索引都作为辅助索引，辅助索引的data域存储相应记录主键的值而不是地址，这也是和MyISAM不同的地方。在根据主索引搜索时，直接找到key所在的节点即可取出数据；在根据辅助索引查找时，则需要先取出主键的值，再走一遍主索引。 因此，在设计表的时候，不建议使用过长的字段作为主键，也不建议使用非单调的字段作为主键，这样会造成主索引频繁分裂。 PS：整理自《Java工程师修炼之道》"></a>2.InnoDB: 其数据文件本身就是索引文件。相比MyISAM，索引文件和数据文件是分离的，其表数据文件本身就是按B+Tree组织的一个索引结构，树的叶节点data域保存了完整的数据记录。这个索引的key是数据表的主键，因此InnoDB表数据文件本身就是主索引。这被称为“聚簇索引（或聚集索引）”。而其余的索引都作为辅助索引，辅助索引的data域存储相应记录主键的值而不是地址，这也是和MyISAM不同的地方。在根据主索引搜索时，直接找到key所在的节点即可取出数据；在根据辅助索引查找时，则需要先取出主键的值，再走一遍主索引。 因此，在设计表的时候，不建议使用过长的字段作为主键，也不建议使用非单调的字段作为主键，这样会造成主索引频繁分裂。 PS：整理自《Java工程师修炼之道》</h3><h3 id="分布式事务"><a href="#分布式事务" class="headerlink" title="分布式事务"></a>分布式事务</h3><h3 id="Transition的原理"><a href="#Transition的原理" class="headerlink" title="@Transition的原理"></a>@Transition的原理</h3><h3 id="sql交并集，事务隔离级别"><a href="#sql交并集，事务隔离级别" class="headerlink" title="sql交并集，事务隔离级别"></a>sql交并集，事务隔离级别</h3><h3 id="数据库事务控制"><a href="#数据库事务控制" class="headerlink" title="数据库事务控制"></a>数据库事务控制</h3><ul>
 <li>Spring团队的建议是你在具体的类（或类的方法）上使用 @Transactional 注解，而不要使用在类所要实现的任何<font color="red">接口</font>上。<ul>

@@ -350,82 +350,6 @@
   
   
   <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="http://chengccj.github.io/2020/06/01/Mybatis/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="Cheng">
-      <meta itemprop="description" content="一个咸鱼码农的小破站">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="程小生">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          
-            <a href="/2020/06/01/Mybatis/" class="post-title-link" itemprop="url">Mybatis</a>
-        </h2>
-
-        <div class="post-meta">
-            <span class="post-meta-item">
-              <span class="post-meta-item-icon">
-                <i class="far fa-calendar"></i>
-              </span>
-              <span class="post-meta-item-text">发表于</span>
-
-              <time title="创建时间：2020-06-01 08:11:29" itemprop="dateCreated datePublished" datetime="2020-06-01T08:11:29+00:00">2020-06-01</time>
-            </span>
-              <span class="post-meta-item">
-                <span class="post-meta-item-icon">
-                  <i class="far fa-calendar-check"></i>
-                </span>
-                <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-06-21 03:08:08" itemprop="dateModified" datetime="2020-06-21T03:08:08+00:00">2020-06-21</time>
-              </span>
-
-          
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-          <h1 id="Mybatis"><a href="#Mybatis" class="headerlink" title="Mybatis"></a>Mybatis</h1><p>Mapper(映射器): roleMapper.getRole</p>
-<p>SqlSession: sqlSession.selectOne</p>
-<h4 id="生命周期"><a href="#生命周期" class="headerlink" title="生命周期"></a>生命周期</h4><ol>
-<li>SqlSessionFactoryBuilder：构建(多个)SessionFactory,构建好后就寿终正寝。</li>
-<li>SqlSessionFactory：全局的，在正个流程都可用。视情况看是否采用单例，以达到节省资源。</li>
-<li>SQLSession：线程不安全。相当于JDBC中的Connection对象。</li>
-<li>Mapper：相当JDBC中的一条SQL语句的执行，<font color="red">最大</font>范围跟SQLSession相同。</li>
-</ol>
-<h4 id="缓存"><a href="#缓存" class="headerlink" title="缓存"></a>缓存</h4><ul>
-<li>一般是一级缓存，同一个SQLSession对象调用同一个mapper方法(参数和sql语句都一样)，则从缓存中获取。 </li>
-<li>不同的SQLSession是相互隔离的，所以不同的SQLSession对象会重新发送sql到数据库去执行。</li>
-</ul>
-
-      
-    </div>
-
-    
-    
-    
-      <footer class="post-footer">
-        <div class="post-eof"></div>
-      </footer>
-  </article>
-  
-  
-  
-
-      
-  
-  
-  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="http://chengccj.github.io/2020/06/01/%E5%88%86%E5%B8%83%E5%BC%8F/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -484,6 +408,82 @@
             </div>
           <!--/noindex-->
         
+      
+    </div>
+
+    
+    
+    
+      <footer class="post-footer">
+        <div class="post-eof"></div>
+      </footer>
+  </article>
+  
+  
+  
+
+      
+  
+  
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://chengccj.github.io/2020/06/01/Mybatis/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Cheng">
+      <meta itemprop="description" content="一个咸鱼码农的小破站">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="程小生">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          
+            <a href="/2020/06/01/Mybatis/" class="post-title-link" itemprop="url">Mybatis</a>
+        </h2>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2020-06-01 08:11:29" itemprop="dateCreated datePublished" datetime="2020-06-01T08:11:29+00:00">2020-06-01</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2020-06-21 03:08:08" itemprop="dateModified" datetime="2020-06-21T03:08:08+00:00">2020-06-21</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+          <h1 id="Mybatis"><a href="#Mybatis" class="headerlink" title="Mybatis"></a>Mybatis</h1><p>Mapper(映射器): roleMapper.getRole</p>
+<p>SqlSession: sqlSession.selectOne</p>
+<h4 id="生命周期"><a href="#生命周期" class="headerlink" title="生命周期"></a>生命周期</h4><ol>
+<li>SqlSessionFactoryBuilder：构建(多个)SessionFactory,构建好后就寿终正寝。</li>
+<li>SqlSessionFactory：全局的，在正个流程都可用。视情况看是否采用单例，以达到节省资源。</li>
+<li>SQLSession：线程不安全。相当于JDBC中的Connection对象。</li>
+<li>Mapper：相当JDBC中的一条SQL语句的执行，<font color="red">最大</font>范围跟SQLSession相同。</li>
+</ol>
+<h4 id="缓存"><a href="#缓存" class="headerlink" title="缓存"></a>缓存</h4><ul>
+<li>一般是一级缓存，同一个SQLSession对象调用同一个mapper方法(参数和sql语句都一样)，则从缓存中获取。 </li>
+<li>不同的SQLSession是相互隔离的，所以不同的SQLSession对象会重新发送sql到数据库去执行。</li>
+</ul>
+
       
     </div>
 
@@ -610,7 +610,7 @@
                   <i class="far fa-calendar-check"></i>
                 </span>
                 <span class="post-meta-item-text">更新于</span>
-                <time title="修改时间：2020-08-16 15:48:13" itemprop="dateModified" datetime="2020-08-16T15:48:13+00:00">2020-08-16</time>
+                <time title="修改时间：2020-08-16 15:53:04" itemprop="dateModified" datetime="2020-08-16T15:53:04+00:00">2020-08-16</time>
               </span>
 
           
