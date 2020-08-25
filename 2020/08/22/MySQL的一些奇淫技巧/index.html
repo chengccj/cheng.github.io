@@ -35,18 +35,20 @@
     var CONFIG = {"hostname":"chengccj.github.io","root":"/","scheme":"Muse","version":"7.8.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12,"onmobile":false},"copycode":{"enable":false,"show_result":false,"style":null},"back2top":{"enable":true,"sidebar":false,"scrollpercent":false},"bookmark":{"enable":false,"color":"#222","save":"auto"},"fancybox":false,"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"algolia":{"hits":{"per_page":10},"labels":{"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}},"localsearch":{"enable":false,"trigger":"auto","top_n_per_article":1,"unescape":false,"preload":false},"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}}};
   </script>
 
-  <meta name="description" content="一个咸鱼码农的小破站">
-<meta property="og:type" content="website">
-<meta property="og:title" content="程小生">
-<meta property="og:url" content="http://chengccj.github.io/archives/2020/06/index.html">
+  <meta name="description" content="可能是定性思维的原因，刚出来工作时竟然有好几处地方想不出来，不应该！">
+<meta property="og:type" content="article">
+<meta property="og:title" content="MySQL的一些奇淫技巧">
+<meta property="og:url" content="http://chengccj.github.io/2020/08/22/MySQL%E7%9A%84%E4%B8%80%E4%BA%9B%E5%A5%87%E6%B7%AB%E6%8A%80%E5%B7%A7/index.html">
 <meta property="og:site_name" content="程小生">
-<meta property="og:description" content="一个咸鱼码农的小破站">
+<meta property="og:description" content="可能是定性思维的原因，刚出来工作时竟然有好几处地方想不出来，不应该！">
 <meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2020-08-22T15:48:29.000Z">
+<meta property="article:modified_time" content="2020-08-25T12:44:20.181Z">
 <meta property="article:author" content="Cheng">
-<meta property="article:tag" content="‘Java&#39;">
+<meta property="article:tag" content="MySQL">
 <meta name="twitter:card" content="summary">
 
-<link rel="canonical" href="http://chengccj.github.io/archives/2020/06/">
+<link rel="canonical" href="http://chengccj.github.io/2020/08/22/MySQL%E7%9A%84%E4%B8%80%E4%BA%9B%E5%A5%87%E6%B7%AB%E6%8A%80%E5%B7%A7/">
 
 
 <script id="page-configurations">
@@ -54,12 +56,12 @@
   CONFIG.page = {
     sidebar: "",
     isHome : false,
-    isPost : false,
+    isPost : true,
     lang   : 'zh-CN'
   };
 </script>
 
-  <title>归档 | 程小生</title>
+  <title>MySQL的一些奇淫技巧 | 程小生</title>
   
 
 
@@ -160,96 +162,92 @@
         <div class="content-wrap">
           
 
-          <div class="content archive">
+          <div class="content post posts-expand">
             
 
+    
   
   
-  
-  <div class="post-block">
-    <div class="posts-collapse">
-      <div class="collection-title">
-        <span class="collection-header">嗯..! 目前共计 8 篇日志。 继续努力。</span>
-      </div>
+  <article itemscope itemtype="http://schema.org/Article" class="post-block" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="http://chengccj.github.io/2020/08/22/MySQL%E7%9A%84%E4%B8%80%E4%BA%9B%E5%A5%87%E6%B7%AB%E6%8A%80%E5%B7%A7/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Cheng">
+      <meta itemprop="description" content="一个咸鱼码农的小破站">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="程小生">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          MySQL的一些奇淫技巧
+        </h1>
+
+        <div class="post-meta">
+            <span class="post-meta-item">
+              <span class="post-meta-item-icon">
+                <i class="far fa-calendar"></i>
+              </span>
+              <span class="post-meta-item-text">发表于</span>
+
+              <time title="创建时间：2020-08-22 15:48:29" itemprop="dateCreated datePublished" datetime="2020-08-22T15:48:29+00:00">2020-08-22</time>
+            </span>
+              <span class="post-meta-item">
+                <span class="post-meta-item-icon">
+                  <i class="far fa-calendar-check"></i>
+                </span>
+                <span class="post-meta-item-text">更新于</span>
+                <time title="修改时间：2020-08-25 12:44:20" itemprop="dateModified" datetime="2020-08-25T12:44:20+00:00">2020-08-25</time>
+              </span>
+
+          
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
 
       
-    <div class="collection-year">
-      <span class="collection-header">2020</span>
+        <h4 id="可能是定性思维的原因，刚出来工作时竟然有好几处地方想不出来，不应该！"><a href="#可能是定性思维的原因，刚出来工作时竟然有好几处地方想不出来，不应该！" class="headerlink" title="可能是定性思维的原因，刚出来工作时竟然有好几处地方想不出来，不应该！"></a>可能是定性思维的原因，刚出来工作时竟然有好几处地方想不出来，不应该！</h4>
     </div>
 
-  <article itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
+    
+    
+    
 
-      <div class="post-meta">
-        <time itemprop="dateCreated"
-              datetime="2020-06-01T08:11:29+00:00"
-              content="2020-06-01">
-          06-01
-        </time>
-      </div>
+      <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/MySQL/" rel="tag"># MySQL</a>
+          </div>
 
-      <div class="post-title">
-          <a class="post-title-link" href="/2020/06/01/Mybatis/" itemprop="url">
-            <span itemprop="name">Mybatis</span>
-          </a>
-      </div>
-
-    </header>
-  </article>
-
-  <article itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <div class="post-meta">
-        <time itemprop="dateCreated"
-              datetime="2020-06-01T08:11:29+00:00"
-              content="2020-06-01">
-          06-01
-        </time>
-      </div>
-
-      <div class="post-title">
-          <a class="post-title-link" href="/2020/06/01/%E5%88%86%E5%B8%83%E5%BC%8F/" itemprop="url">
-            <span itemprop="name">分布式\微服务</span>
-          </a>
-      </div>
-
-    </header>
-  </article>
-
-  <article itemscope itemtype="http://schema.org/Article">
-    <header class="post-header">
-
-      <div class="post-meta">
-        <time itemprop="dateCreated"
-              datetime="2020-06-01T08:11:29+00:00"
-              content="2020-06-01">
-          06-01
-        </time>
-      </div>
-
-      <div class="post-title">
-          <a class="post-title-link" href="/2020/06/01/AOP%E6%BA%90%E7%A0%81%E8%A7%A3%E6%9E%90/" itemprop="url">
-            <span itemprop="name">Aop</span>
-          </a>
-      </div>
-
-    </header>
-  </article>
+        
 
 
+        
+    <div class="post-nav">
+      <div class="post-nav-item">
+    <a href="/2020/08/10/Redis%E8%B7%B3%E8%A1%A8%E5%8F%8A%E5%BC%95%E5%8F%91%E7%9A%84%E6%80%9D%E8%80%83/" rel="prev" title="Redis跳表及引发的思考">
+      <i class="fa fa-chevron-left"></i> Redis跳表及引发的思考
+    </a></div>
+      <div class="post-nav-item"></div>
     </div>
-  </div>
+      </footer>
+    
+  </article>
   
   
-  
-
   
 
 
 
           </div>
           
+    <div class="comments" id="gitalk-container"></div>
 
 <script>
   window.addEventListener('tabs:register', () => {
@@ -296,6 +294,7 @@
 
       <!--noindex-->
       <div class="post-toc-wrap sidebar-panel">
+          <div class="post-toc motion-element"><ol class="nav"><li class="nav-item nav-level-4"><a class="nav-link" href="#可能是定性思维的原因，刚出来工作时竟然有好几处地方想不出来，不应该！"><span class="nav-number">1.</span> <span class="nav-text">可能是定性思维的原因，刚出来工作时竟然有好几处地方想不出来，不应该！</span></a></li></ol></div>
       </div>
       <!--/noindex-->
 
@@ -525,6 +524,25 @@ window.addEventListener('pjax:success', () => {
 
   
 
+<link rel="stylesheet" href="//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.css">
+
+<script>
+NexT.utils.loadComments(document.querySelector('#gitalk-container'), () => {
+  NexT.utils.getScript('//cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js', () => {
+    var gitalk = new Gitalk({
+      clientID    : '66a8689a66a4ac3610a7# GitHub Application Client ID',
+      clientSecret: '3fdbdc54c3b5823fe13c864e4eef77efb55bc42d# GitHub Application Client Secret',
+      repo        : 'chengccj.github.io# Repository name to store issues',
+      owner       : 'chengccj',
+      admin       : ['chengccj'],
+      id          : 'ba212569182a9659d84cdd92ca04142f',
+        language: 'zh-CN',
+      distractionFreeMode: true
+    });
+    gitalk.render('gitalk-container');
+  }, window.Gitalk);
+});
+</script>
 
     </div>
 </body>
